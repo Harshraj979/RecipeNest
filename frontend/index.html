@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecipeNest — Share & Discover Recipes</title>
+  <meta name="description" content="RecipeNest is a community of home cooks and chefs sharing their best recipes. Discover, save, and publish your culinary creations." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+<nav class="nav" id="main-nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">🍴</div>
+        RecipeNest
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="nav__link">Home</a></li>
+        <li><a href="browse.html" class="nav__link">Browse</a></li>
+        <li><a href="create.html" class="nav__link">Publish</a></li>
+        <li><a href="profile.html" class="nav__link">My Collection</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button class="btn btn--outline btn--sm" onclick="openModal('auth-modal')">Sign in</button>
+        <button class="btn btn--primary btn--sm" onclick="openModal('auth-modal')">Join free</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+  <div class="hero">
+    <div class="hero__content">
+      <p class="hero__label">A community for food lovers</p>
+      <h1 class="hero__title">
+        Where great<br/>
+        recipes find their<br/>
+        <em>home.</em>
+      </h1>
+      <p class="hero__sub">
+        Share your kitchen creations, discover dishes from around the world, and build a collection that's entirely yours.
+      </p>
+      <div class="hero__actions">
+        <a href="browse.html" class="btn btn--primary btn--lg">Explore recipes</a>
+        <a href="create.html" class="btn btn--outline btn--lg">Share yours →</a>
+      </div>
+      <div class="hero__stats">
+        <div>
+          <div class="hero__stat-num">12k+</div>
+          <div class="hero__stat-label">Recipes shared</div>
+        </div>
+        <div>
+          <div class="hero__stat-num">4.8k</div>
+          <div class="hero__stat-label">Home cooks</div>
+        </div>
+        <div>
+          <div class="hero__stat-num">98%</div>
+          <div class="hero__stat-label">Would recommend</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero__img-wrap fade-in">
+      <img src="assets/images/hero.png" alt="Beautiful overhead food photography" class="hero__img" />
+      <div class="hero__img-badge">
+        <div class="hero__img-badge-icon">⭐</div>
+        <div class="hero__img-badge-text">
+          <strong>Recipe of the week</strong>
+          <span>Tuscan Pasta al Pomodoro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="search-section">
+  <div class="search-bar">
+    <span style="color:var(--ink-muted);font-size:1rem;">🔍</span>
+    <input type="text" id="global-search" placeholder="Search recipes, ingredients, chefs…" />
+    <button class="btn btn--primary" onclick="window.location='browse.html'">Search</button>
+  </div>
+</div>
+
+<div class="category-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2>Browse by category</h2>
+        <p>Find exactly what you're craving</p>
+      </div>
+    </div>
+    <div class="category-grid">
+      <div class="category-card active" data-filter="all" onclick="window.location='browse.html?cat=all'">
+        <div class="category-icon">🍽️</div>
+        <span>All</span>
+      </div>
+      <div class="category-card" onclick="window.location='browse.html?cat=breakfast'">
+        <div class="category-icon">🥞</div>
+        <span>Breakfast</span>
+      </div>
+      <div class="category-card" onclick="window.location='browse.html?cat=lunch'">
+        <div class="category-icon">🥗</div>
+        <span>Lunch</span>
+      </div>
+      <div class="category-card" onclick="window.location='browse.html?cat=dinner'">
+        <div class="category-icon">🍝</div>
+        <span>Dinner</span>
+      </div>
+      <div class="category-card" onclick="window.location='browse.html?cat=dessert'">
+        <div class="category-icon">🍰</div>
+        <span>Desserts</span>
+      </div>
+      <div class="category-card" onclick="window.location='browse.html?cat=baking'">
+        <div class="category-icon">🍞</div>
+        <span>Baking</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="featured-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2>Featured this week</h2>
+        <p>Handpicked by our community</p>
+      </div>
+      <a href="browse.html" class="btn btn--ghost">View all →</a>
+    </div>
+    <div class="featured-card fade-in">
+      <img src="assets/images/recipe3.png" alt="Thai Green Curry" class="featured-card__img" />
+      <div class="featured-card__body">
+        <div class="featured-label">⭐ Editor's pick</div>
+        <h2 class="featured-card__title">Authentic Thai Green Curry</h2>
+        <p class="featured-card__desc">
+          A fragrant, deeply flavoured curry made from scratch with homemade green curry paste, coconut milk, Thai basil and your choice of protein. This one will blow your weeknight routine wide open.
+        </p>
+        <div class="featured-card__meta">
+          <div class="meta-item">
+            <span class="meta-item__label">Prep time</span>
+            <span class="meta-item__val">20 min</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-item__label">Cook time</span>
+            <span class="meta-item__val">30 min</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-item__label">Serves</span>
+            <span class="meta-item__val">4 people</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-item__label">Rating</span>
+            <span class="meta-item__val">⭐ 4.9 (238)</span>
+          </div>
+        </div>
+        <div class="featured-card__actions">
+          <a href="recipe.html" class="btn btn--primary">View recipe</a>
+          <button class="btn btn--outline" id="featured-save">♡ Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trending-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2>Trending now</h2>
+        <p>What the community is cooking</p>
+      </div>
+      <a href="browse.html" class="btn btn--ghost">See more →</a>
+    </div>
+    <div class="recipe-grid">
+      <article class="recipe-card fade-in" data-category="breakfast">
+        <div class="recipe-card__img-wrap">
+          <img src="assets/images/recipe1.png" alt="Avocado Toast" class="recipe-card__img" />
+          <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__meta">
+            <span class="tag tag--sage">Breakfast</span>
+            <span class="tag">15 min</span>
+          </div>
+          <a href="recipe.html"><h3 class="recipe-card__title">Smashed Avocado Toast with Poached Egg</h3></a>
+          <p class="recipe-card__desc">Creamy avocado on toasted sourdough, topped with a perfectly poached egg and fresh microgreens.</p>
+          <div class="recipe-card__footer">
+            <div class="recipe-card__author">
+              <div class="avatar">S</div>
+              <span>Sarah Chen</span>
+            </div>
+            <div class="recipe-card__rating">
+              <span class="stars">★★★★★</span>
+              <span>4.8</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="recipe-card fade-in" data-category="dessert">
+        <div class="recipe-card__img-wrap">
+          <img src="assets/images/recipe2.png" alt="Chocolate Lava Cake" class="recipe-card__img" />
+          <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__meta">
+            <span class="tag tag--rust">Dessert</span>
+            <span class="tag">25 min</span>
+          </div>
+          <a href="recipe.html"><h3 class="recipe-card__title">Molten Chocolate Lava Cake</h3></a>
+          <p class="recipe-card__desc">Warm, gooey chocolate cake with a molten centre. Serve with vanilla ice cream and fresh raspberries.</p>
+          <div class="recipe-card__footer">
+            <div class="recipe-card__author">
+              <div class="avatar">M</div>
+              <span>Marco Rossi</span>
+            </div>
+            <div class="recipe-card__rating">
+              <span class="stars">★★★★★</span>
+              <span>4.9</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="recipe-card fade-in" data-category="lunch">
+        <div class="recipe-card__img-wrap">
+          <img src="assets/images/recipe5.png" alt="Mediterranean Salad" class="recipe-card__img" />
+          <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__meta">
+            <span class="tag tag--sage">Lunch</span>
+            <span class="tag">10 min</span>
+          </div>
+          <a href="recipe.html"><h3 class="recipe-card__title">Mediterranean Chickpea Bowl</h3></a>
+          <p class="recipe-card__desc">A vibrant bowl packed with roasted chickpeas, feta, crisp cucumber, olives and a lemony tahini dressing.</p>
+          <div class="recipe-card__footer">
+            <div class="recipe-card__author">
+              <div class="avatar">L</div>
+              <span>Leila Hassan</span>
+            </div>
+            <div class="recipe-card__rating">
+              <span class="stars">★★★★☆</span>
+              <span>4.6</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="recipe-card fade-in" data-category="baking">
+        <div class="recipe-card__img-wrap">
+          <img src="assets/images/recipe4.png" alt="Sourdough Bread" class="recipe-card__img" />
+          <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__meta">
+            <span class="tag">Baking</span>
+            <span class="tag">2 hrs</span>
+          </div>
+          <a href="recipe.html"><h3 class="recipe-card__title">Rustic Sourdough Loaf</h3></a>
+          <p class="recipe-card__desc">A deeply flavoured, crusty sourdough loaf using a 100% hydration starter. Worth every hour of it.</p>
+          <div class="recipe-card__footer">
+            <div class="recipe-card__author">
+              <div class="avatar">J</div>
+              <span>James Park</span>
+            </div>
+            <div class="recipe-card__rating">
+              <span class="stars">★★★★★</span>
+              <span>4.7</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="how-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2>How RecipeNest works</h2>
+        <p>Simple. Thoughtful. Built for cooks.</p>
+      </div>
+    </div>
+    <div class="how-grid">
+      <div class="how-card fade-in">
+        <div class="how-num">01</div>
+        <h3>Create your account</h3>
+        <p>Join a community of passionate home cooks and professional chefs. Your profile becomes your culinary identity.</p>
+      </div>
+      <div class="how-card fade-in">
+        <div class="how-num">02</div>
+        <h3>Publish your recipes</h3>
+        <p>Write up your favourite recipes, add photos, categorise them and share them with thousands of fellow food lovers.</p>
+      </div>
+      <div class="how-card fade-in">
+        <div class="how-num">03</div>
+        <h3>Build your collection</h3>
+        <p>Save any recipe you love to your personal collection. Rate, comment, and connect with the people behind the dishes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner fade-in">
+      <h2>Ready to share your cooking?</h2>
+      <p>Join thousands of home cooks who've made RecipeNest their creative kitchen.</p>
+      <button class="btn btn--cta btn--lg" onclick="openModal('auth-modal')">Create a free account</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer style="background:var(--ink);color:rgba(255,255,255,.5);padding:32px 0;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div style="font-family:var(--font-serif);font-size:1.1rem;color:white;">🍴 RecipeNest</div>
+    <p style="font-size:0.8rem;">© 2025 RecipeNest. Made with ❤️ for food lovers.</p>
+    <div style="display:flex;gap:16px;font-size:0.8rem;">
+      <a href="#" style="color:rgba(255,255,255,.5)">Privacy</a>
+      <a href="#" style="color:rgba(255,255,255,.5)">Terms</a>
+      <a href="#" style="color:rgba(255,255,255,.5)">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal" style="position:relative;">
+    <button class="modal__close" onclick="closeModal('auth-modal')">✕</button>
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:2rem;margin-bottom:8px;">🍴</div>
+      <h2 style="font-size:1.5rem;">Welcome to RecipeNest</h2>
+      <p style="color:var(--ink-muted);font-size:0.875rem;margin-top:6px;">Sign in or create your free account</p>
+    </div>
+    <div style="display:flex;gap:0;border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:24px;">
+      <button id="tab-signin" class="btn w-full auth-tab-active" style="border-radius:0;" onclick="switchTab('signin')">Sign in</button>
+      <button id="tab-signup" class="btn w-full auth-tab-inactive" style="border-radius:0;" onclick="switchTab('signup')">Create account</button>
+    </div>
+    <form id="auth-form" onsubmit="handleAuth(event)">
+      <div id="signup-fields" style="display:none;">
+        <div class="form-group mb-16">
+          <label class="form-label">Full name</label>
+          <input type="text" class="form-input" placeholder="Your name" />
+        </div>
+      </div>
+      <div class="form-group mb-16">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" placeholder="you@example.com" />
+      </div>
+      <div class="form-group" style="margin-bottom:24px;">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" placeholder="••••••••" />
+      </div>
+      <button type="submit" class="btn btn--primary w-full" style="padding:12px;">Continue</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
