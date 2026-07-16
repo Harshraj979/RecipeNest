@@ -1,4 +1,4 @@
-
+require('dotenv').config({ path: './backend/.env' });
 // Entry point: Connects to Database and starts the modular server
 
 const app = require('./backend/app');

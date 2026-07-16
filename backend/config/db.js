@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 const Recipe = require('../models/Recipe');
 
-const MONGO_URL = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/recipenest';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/recipenest';
 
 const defaultRecipes = [
   {

@@ -1382,11 +1382,6 @@
     const errEl    = document.getElementById('auth-error');
     const submitBtn = document.getElementById('auth-submit-btn');
 
-    if (activeTab === 'signup' && !name.trim()) {
-      if (errEl) { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; }
-      return;
-    }
-
     if (!email || !password) {
       if (errEl) { errEl.textContent = 'Please fill in all fields.'; errEl.style.display = 'block'; }
       return;

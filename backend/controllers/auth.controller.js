@@ -6,9 +6,7 @@ const User = require('../models/User');
 // POST /api/auth/signup
 exports.signup = async (req, res) => {
   try {
-    const name = (req.body.name || '').trim();
-    const email = (req.body.email || '').trim().toLowerCase();
-    const password = req.body.password || '';
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required.' });
@@ -28,7 +26,6 @@ exports.signup = async (req, res) => {
     req.session.userId = user._id;
 
     res.status(201).json({
-      message: 'Account created successfully.',
       user: { id: user._id, name: user.name, email: user.email, bio: user.bio, location: user.location }
     });
   } catch (err) {
@@ -40,8 +37,7 @@ exports.signup = async (req, res) => {
 // POST /api/auth/login
 exports.login = async (req, res) => {
   try {
-    const email = (req.body.email || '').trim().toLowerCase();
-    const password = req.body.password || '';
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required.' });
@@ -60,7 +56,6 @@ exports.login = async (req, res) => {
     req.session.userId = user._id;
 
     res.json({
-      message: 'Login successful.',
       user: { id: user._id, name: user.name, email: user.email, bio: user.bio, location: user.location }
     });
   } catch (err) {
@@ -106,13 +101,12 @@ exports.updateProfile = async (req, res) => {
     if (bio !== undefined) user.bio = bio;
     if (location !== undefined) user.location = location;
 
-    if (email && email.trim().toLowerCase() !== user.email.toLowerCase()) {
-      const nextEmail = email.trim().toLowerCase();
-      const existing = await User.findOne({ email: nextEmail });
+    if (email && email.toLowerCase() !== user.email.toLowerCase()) {
+      const existing = await User.findOne({ email });
       if (existing) {
         return res.status(400).json({ message: 'Email already in use.' });
       }
-      user.email = nextEmail;
+      user.email = email;
     }
 
     if (password) {
