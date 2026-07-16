@@ -1437,12 +1437,38 @@
   };
 
   const updateNavForUser = (user) => {
-    if (!user) return;
     const signinBtn = document.getElementById('signin-btn');
-    const joinBtn   = document.getElementById('joinbtn');
-    if (signinBtn) signinBtn.style.display = 'none';
-    if (joinBtn)   joinBtn.style.display   = 'none';
-  };
+    const joinBtn = document.getElementById('joinbtn');
+
+    if (!signinBtn || !joinBtn) return;
+
+    if (user) {
+        signinBtn.style.display = 'none';
+        joinBtn.style.display = 'none';
+
+        let logoutBtn = document.getElementById('logout-btn');
+
+        if (!logoutBtn) {
+            logoutBtn = document.createElement('button');
+            logoutBtn.id = 'logout-btn';
+            logoutBtn.className = 'btn btn--primary btn--sm';
+            logoutBtn.textContent = 'Sign Out';
+
+            logoutBtn.onclick = () => {
+                localStorage.removeItem('rn-user');
+                window.location.href = 'index.html';
+            };
+
+            joinBtn.parentNode.appendChild(logoutBtn);
+        }
+    } else {
+        signinBtn.style.display = '';
+        joinBtn.style.display = '';
+
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.remove();
+    }
+};
 
   const initGlobalEnhancements = () => {
     injectStyles();
