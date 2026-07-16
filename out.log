@@ -1,3 +1,0 @@
-◇ injected env (2) from backend\.env // tip: ⌘ suppress logs { quiet: true }
-Connected to MongoDB at: mongodb://kaushiki:12345@ac-yw9zfe0-shard-00-00.i7tbsab.mongodb.net:27017,ac-yw9zfe0-shard-00-01.i7tbsab.mongodb.net:27017,ac-yw9zfe0-shard-00-02.i7tbsab.mongodb.net:27017/?ssl=true&replicaSet=atlas-13111k-shard-0&authSource=admin&appName=Cluster0
-RecipeNest is running!

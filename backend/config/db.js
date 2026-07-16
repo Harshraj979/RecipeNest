@@ -162,7 +162,6 @@ const defaultRecipes = [
 async function connectDB() {
   try {
     await mongoose.connect(MONGO_URL);
-    console.log('Connected to MongoDB at:', MONGO_URL);
 
     const count = await Recipe.countDocuments();
     if (count === 0) {
