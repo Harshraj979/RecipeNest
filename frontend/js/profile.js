@@ -1,14 +1,14 @@
 /* ─── Profile Page JS ───────────────────────────────────────── */
 
-// Switch active tabs in the profile dashboard
-function switchTab(tabId) {
+// Define switchTab globally BEFORE script.js loads, so script.js won't overwrite it
+window.switchTab = function switchTab(tabId) {
   document.querySelectorAll('.profile-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === tabId);
   });
   document.querySelectorAll('.tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === `tab-${tabId}`);
   });
-}
+};
 
 function confirmDelete() {
   if (confirm('Delete this recipe? This cannot be undone.')) {
@@ -44,7 +44,10 @@ async function loadUserProfile() {
     const locDisplay = document.querySelector('.profile-location span:nth-child(2)');
     const avatarDisplay = document.querySelector('.profile-avatar');
 
-    if (nameDisplay) nameDisplay.textContent = user.name || 'Your Profile';
+    if (nameDisplay) {
+      nameDisplay.textContent = user.name || 'Your Profile';
+      document.title = `${user.name || 'My'} — RecipeNest Profile`;
+    }
     if (bioDisplay) bioDisplay.textContent = user.bio || 'No bio written yet.';
     if (locDisplay) locDisplay.textContent = user.location || 'Location not set';
     if (avatarDisplay && user.name) {
@@ -84,8 +87,12 @@ async function loadUserRecipes(user) {
     const data = await res.json();
     const recipes = data.recipes || [];
 
-    // Filter recipes published by this user
-    const myRecipes = recipes.filter(r => r.author?.id === user._id || r.author?.name === user.name);
+    // Use string comparison for author ID matching
+    const userId = String(user._id || user.id || '');
+    const myRecipes = recipes.filter(r => {
+      const authorId = String(r.author?.id || '');
+      return authorId === userId || r.author?.name === user.name;
+    });
 
     const grid = document.querySelector('#tab-my-recipes .recipe-grid');
     const countSpan = document.querySelector('#tab-my-recipes .collection-header h2 span');
@@ -138,6 +145,10 @@ async function loadUserRecipes(user) {
       `;
       grid.appendChild(article);
     });
+
+    if (window.RecipeNestUI && window.RecipeNestUI.initDynamicElements) {
+      window.RecipeNestUI.initDynamicElements();
+    }
 
   } catch (err) {
     console.error('Failed to load user recipes:', err);

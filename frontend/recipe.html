@@ -25,8 +25,8 @@
         <li><a href="profile.html" class="nav__link">My Collection</a></li>
       </ul>
       <div class="nav__actions">
-        <button class="btn btn--outline btn--sm" onclick="openModal('auth-modal')">Sign in</button>
-        <button class="btn btn--primary btn--sm" onclick="openModal('auth-modal')">Join free</button>
+        <button class="btn btn--outline btn--sm" id="signin-btn" onclick="openModal('auth-modal');switchAuthTab('signin')">Sign in</button>
+        <button class="btn btn--primary btn--sm" id="joinbtn" onclick="openModal('auth-modal');switchAuthTab('signup')">Join free</button>
       </div>
       <button class="hamburger" id="nav-hamburger" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -408,8 +408,8 @@
       <p style="color:var(--ink-muted);font-size:0.875rem;margin-top:6px;">Join RecipeNest to save and review recipes</p>
     </div>
     <div style="display:flex;gap:0;border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:24px;">
-      <button id="tab-signin" class="btn w-full auth-tab-active" style="border-radius:0;" onclick="switchTab('signin')">Sign in</button>
-      <button id="tab-signup" class="btn w-full auth-tab-inactive" style="border-radius:0;" onclick="switchTab('signup')">Create account</button>
+      <button id="tab-signin" class="btn w-full auth-tab-active" style="border-radius:0;" onclick="switchAuthTab('signin')">Sign in</button>
+      <button id="tab-signup" class="btn w-full auth-tab-inactive" style="border-radius:0;" onclick="switchAuthTab('signup')">Create account</button>
     </div>
     <form id="auth-form" onsubmit="handleAuth(event)">
       <div id="signup-fields" style="display:none;">

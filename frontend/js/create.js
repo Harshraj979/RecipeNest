@@ -204,6 +204,9 @@ async function publishRecipe(e) {
     tags.push(span.textContent.trim());
   });
 
+  const previewImg = document.getElementById('preview-img');
+  const image = (previewImg && previewImg.src && !previewImg.src.endsWith('create.html') && !previewImg.src.endsWith('create.html#')) ? previewImg.src : '';
+
   const payload = {
     title,
     description: desc,
@@ -214,7 +217,8 @@ async function publishRecipe(e) {
     servings: parseInt(servingsInput?.value) || 4,
     ingredients,
     steps,
-    tags
+    tags,
+    image
   };
 
   try {

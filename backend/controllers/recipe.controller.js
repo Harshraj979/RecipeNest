@@ -38,7 +38,7 @@ exports.getRecipeById = async (req, res) => {
 // POST /api/recipes
 exports.createRecipe = async (req, res) => {
   try {
-    const { title, description, category, difficulty, prepTime, cookTime, servings, ingredients, steps, tags } = req.body;
+    const { title, description, category, difficulty, prepTime, cookTime, servings, ingredients, steps, tags, image } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: 'Recipe title is required.' });
@@ -57,6 +57,7 @@ exports.createRecipe = async (req, res) => {
       ingredients: ingredients || [],
       steps:       steps       || [],
       tags:        tags        || [],
+      image:       image       || '',
       author: { id: req.session.userId, name: author ? author.name : 'Anonymous' }
     });
 

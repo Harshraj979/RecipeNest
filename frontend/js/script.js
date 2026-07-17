@@ -59,7 +59,6 @@
       .rn-toast-container,
       .rn-back-to-top,
       .rn-progress-bar,
-      .rn-theme-toggle,
       .rn-mobile-toggle,
       .rn-search-suggestions,
       .rn-search-spinner,
@@ -77,10 +76,6 @@
         place-items: center;
         background: linear-gradient(135deg, rgba(255, 250, 245, 0.98), rgba(247, 241, 233, 0.98));
         transition: opacity 280ms ease, visibility 280ms ease;
-      }
-
-      [data-theme='dark'] .rn-page-loader {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(17, 24, 39, 0.98));
       }
 
       .rn-page-loader.is-hidden {
@@ -174,12 +169,6 @@
         animation: rn-toast-in 220ms ease, rn-toast-out 240ms ease 2900ms forwards;
       }
 
-      [data-theme='dark'] .rn-toast {
-        background: rgba(15, 23, 42, 0.92);
-        color: #fff;
-        border-color: rgba(255, 255, 255, 0.08);
-      }
-
       .rn-toast__icon {
         width: 24px;
         height: 24px;
@@ -220,23 +209,6 @@
         transform: translateY(0) scale(1);
       }
 
-      .rn-theme-toggle,
-      .rn-mobile-toggle {
-        pointer-events: auto;
-        border: 0;
-        border-radius: 999px;
-        width: 42px;
-        height: 42px;
-        display: grid;
-        place-items: center;
-        background: rgba(255, 255, 255, 0.7);
-        color: #0f172a;
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
-        transition: transform 160ms ease, box-shadow 160ms ease, background-color 200ms ease;
-      }
-
-      .rn-theme-toggle.is-rotating { transform: rotate(180deg) scale(1.02); }
-
       .nav.is-sticky {
         position: sticky;
         top: 0;
@@ -247,10 +219,6 @@
       .nav.is-scrolled {
         background: rgba(255, 250, 245, 0.85);
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      }
-
-      [data-theme='dark'] .nav.is-scrolled {
-        background: rgba(15, 23, 42, 0.88);
       }
 
       .nav__links {
@@ -957,6 +925,8 @@
   const initRecipeCardEffects = () => {
     const cards = qsa('.recipe-card, .featured-card');
     cards.forEach((card) => {
+      if (card.dataset.rnCardEffectsBound === 'true') return;
+      card.dataset.rnCardEffectsBound = 'true';
       card.addEventListener('pointermove', (event) => {
         if (prefersReducedMotion) return;
         const rect = card.getBoundingClientRect();
@@ -974,6 +944,8 @@
     });
 
     qsa('.recipe-card__bookmark, #save-btn, #featured-save').forEach((button) => {
+      if (button.dataset.rnBookmarkBound === 'true') return;
+      button.dataset.rnBookmarkBound = 'true';
       const saved = restoreSavedSet();
       const key = getSaveKey(button);
       if (saved.has(key)) applySavedState(button, true, false);
@@ -1018,21 +990,28 @@
     if (resultCount) resultCount.textContent = term ? `Showing ${count} result${count === 1 ? '' : 's'}` : resultCount.textContent;
   };
 
-  const enhanceSearchInput = (input, searchIndex) => {
+  const enhanceSearchInput = (input) => {
     const wrapper = input.parentElement;
     if (!wrapper) return;
     wrapper.style.position = wrapper.style.position || 'relative';
 
-    const spinner = document.createElement('span');
-    spinner.className = 'rn-search-spinner';
-    wrapper.appendChild(spinner);
+    let spinner = wrapper.querySelector('.rn-search-spinner');
+    if (!spinner) {
+      spinner = document.createElement('span');
+      spinner.className = 'rn-search-spinner';
+      wrapper.appendChild(spinner);
+    }
 
-    const suggestions = document.createElement('div');
-    suggestions.className = 'rn-search-suggestions';
-    wrapper.appendChild(suggestions);
+    let suggestions = wrapper.querySelector('.rn-search-suggestions');
+    if (!suggestions) {
+      suggestions = document.createElement('div');
+      suggestions.className = 'rn-search-suggestions';
+      wrapper.appendChild(suggestions);
+    }
 
     const renderSuggestions = (query) => {
       const term = query.trim().toLowerCase();
+      const searchIndex = buildSearchIndex();
       const matches = term ? searchIndex.filter((entry) => entry.text.includes(term)).slice(0, 6) : searchIndex.slice(0, 6);
       suggestions.innerHTML = '';
 
@@ -1061,23 +1040,27 @@
     const runSearch = debounce(() => {
       spinner.classList.add('is-visible');
       window.requestAnimationFrame(() => {
+        const searchIndex = buildSearchIndex();
         applySearchResults(input.value, searchIndex);
         renderSuggestions(input.value);
         window.setTimeout(() => spinner.classList.remove('is-visible'), 160);
       });
     }, 150);
 
-    input.addEventListener('input', runSearch, { passive: true });
-    input.addEventListener('focus', () => renderSuggestions(input.value));
-    input.addEventListener('blur', () => window.setTimeout(() => suggestions.classList.remove('is-open'), 180));
+    if (input.dataset.rnSearchEventBound !== 'true') {
+      input.dataset.rnSearchEventBound = 'true';
+      input.addEventListener('input', runSearch, { passive: true });
+      input.addEventListener('focus', () => renderSuggestions(input.value));
+      input.addEventListener('blur', () => window.setTimeout(() => suggestions.classList.remove('is-open'), 180));
+    }
+    const searchIndex = buildSearchIndex();
     applySearchResults(input.value, searchIndex);
   };
 
   const initSearchEnhancements = () => {
     const inputs = qsa('#global-search, #recipe-search');
     if (!inputs.length) return;
-    const searchIndex = buildSearchIndex();
-    inputs.forEach((input) => enhanceSearchInput(input, searchIndex));
+    inputs.forEach((input) => enhanceSearchInput(input));
   };
 
   const attachCommentInteractions = (comment) => {
@@ -1185,8 +1168,13 @@
 
   const initForms = () => {
     qsa('.form-group').forEach((group) => {
-      // Skip auth modal form groups — they have their own fixed layout
+      // Skip auth modal, create page, and profile settings — they have their own fixed layout
       if (group.closest('#auth-modal')) return;
+      if (group.closest('#create-form')) return;
+      if (group.closest('.create-layout')) return;
+      if (group.closest('#tab-edit')) return;
+      if (group.closest('.edit-profile-grid')) return;
+      if (group.closest('.profile-layout')) return;
 
       const input = qs('.form-input, .form-textarea, .form-select', group);
       const label = qs('.form-label', group);
@@ -1236,31 +1224,7 @@
     input.classList.toggle('rn-valid', valid);
   };
 
-  const initThemeToggle = () => {
-    if (qs('.rn-theme-toggle')) return;
-    const navActions = qs('.nav__actions') || document.body;
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'rn-theme-toggle';
-    button.setAttribute('aria-label', 'Toggle dark mode');
-    button.innerHTML = '◐';
-    button.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
-      button.classList.add('is-rotating');
-      applyTheme(next);
-      window.setTimeout(() => button.classList.remove('is-rotating'), 280);
-    });
-    navActions.appendChild(button);
-
-    const saved = localStorage.getItem(CONFIG.themeKey);
-    applyTheme(saved === 'dark' ? 'dark' : 'light', false);
-  };
-
-  const applyTheme = (theme, persist = true) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (persist) localStorage.setItem(CONFIG.themeKey, theme);
-  };
+  // Dark mode removed per user request
 
   const createRippleEffect = (event) => {
     const button = event.currentTarget;
@@ -1345,7 +1309,7 @@
 
   let activeTab = 'signin';
 
-  const switchTab = (tab) => {
+  const switchAuthTab = (tab) => {
     activeTab = tab;
     const signupFields = document.getElementById('signup-fields');
     const tabSignin    = document.getElementById('tab-signin');
@@ -1434,31 +1398,32 @@
   const updateNavForUser = (user) => {
     const signinBtn = document.getElementById('signin-btn');
     const joinBtn = document.getElementById('joinbtn');
-
-    if (!signinBtn || !joinBtn) return;
+    const navActions = qs('.nav__actions');
 
     if (user) {
-        signinBtn.style.display = 'none';
-        joinBtn.style.display = 'none';
+        // Hide sign in / join buttons if they exist
+        if (signinBtn) signinBtn.style.display = 'none';
+        if (joinBtn) joinBtn.style.display = 'none';
 
         let logoutBtn = document.getElementById('logout-btn');
 
-        if (!logoutBtn) {
+        if (!logoutBtn && navActions) {
             logoutBtn = document.createElement('button');
             logoutBtn.id = 'logout-btn';
             logoutBtn.className = 'btn btn--primary btn--sm';
             logoutBtn.textContent = 'Sign Out';
 
-            logoutBtn.onclick = () => {
+            logoutBtn.onclick = async () => {
+                try { await fetch('/api/auth/logout', { method: 'POST' }); } catch(e) {}
                 localStorage.removeItem('rn-user');
                 window.location.href = 'index.html';
             };
 
-            joinBtn.parentNode.appendChild(logoutBtn);
+            navActions.appendChild(logoutBtn);
         }
     } else {
-        signinBtn.style.display = '';
-        joinBtn.style.display = '';
+        if (signinBtn) signinBtn.style.display = '';
+        if (joinBtn) joinBtn.style.display = '';
 
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) logoutBtn.remove();
@@ -1485,15 +1450,24 @@
     initRatingEnhancements();
     initImageEnhancements();
     initForms();
-    initThemeToggle();
     enhanceButtons();
     initRecipePageHelpers();
     initLoadSkeletons();
     
     // Automatically update the nav for logged-in users on load
+    // Also verify the session is still valid on the backend
     try {
       const stored = localStorage.getItem('rn-user');
-      if (stored) updateNavForUser(JSON.parse(stored));
+      if (stored) {
+        updateNavForUser(JSON.parse(stored));
+        // Verify session is still alive — if not, clean up localStorage
+        fetch('/api/auth/me').then(res => {
+          if (!res.ok) {
+            localStorage.removeItem('rn-user');
+            updateNavForUser(null);
+          }
+        }).catch(() => {});
+      }
     } catch (_) {}
 
     window.addEventListener('resize', debounce(() => {
@@ -1501,14 +1475,22 @@
       initHeroEnhancements();
     }, 220), { passive: true });
   };
+  const initDynamicElements = () => {
+    observeReveal();
+    initRecipeCardEffects();
+    initSearchEnhancements();
+    enhanceButtons();
+  };
 
   window.showToast = showToast;
   window.openModal = openModal;
   window.closeModal = closeModal;
-  window.switchTab = switchTab;
+  window.switchAuthTab = switchAuthTab;
+  // Only set window.switchTab if profile.js hasn't already defined it
+  if (!window.switchTab) window.switchTab = switchAuthTab;
   window.handleAuth = handleAuth;
   window.updateNavForUser = updateNavForUser;
-  window.RecipeNestUI = { showToast, applyTheme };
+  window.RecipeNestUI = { showToast, initDynamicElements };
 
   onReady(() => {
     initGlobalEnhancements();

@@ -166,7 +166,13 @@ async function connectDB() {
     const count = await Recipe.countDocuments();
     if (count === 0) {
       console.log('Seeding database with default recipes...');
-      await Recipe.insertMany(defaultRecipes);
+      for (const recipe of defaultRecipes) {
+        await Recipe.updateOne(
+          { title: recipe.title },
+          { $setOnInsert: recipe },
+          { upsert: true }
+        );
+      }
       console.log('Database successfully seeded!');
     }
   } 

@@ -146,27 +146,14 @@ async function fetchAndRenderRecipes(category = 'all', search = '') {
       listContainer.appendChild(listCard);
     });
 
-    bindBookmarkButtons();
+    if (window.RecipeNestUI && window.RecipeNestUI.initDynamicElements) {
+      window.RecipeNestUI.initDynamicElements();
+    }
 
   } catch (err) {
     console.error('Failed to fetch recipes:', err);
     showToast('Failed to load recipes', 'error');
   }
-}
-
-// Bind event listeners for recipe bookmarks
-function bindBookmarkButtons() {
-  document.querySelectorAll('.recipe-card__bookmark').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const isSaved = btn.textContent === '♥';
-      btn.textContent = isSaved ? '♡' : '♥';
-      btn.style.background = isSaved ? '' : 'var(--rust)';
-      btn.style.color = isSaved ? '' : 'white';
-      showToast(isSaved ? 'Removed from collection' : 'Saved to collection', 'success');
-    });
-  });
 }
 
 /* View toggle (Grid / List) */
