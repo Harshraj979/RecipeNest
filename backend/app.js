@@ -14,7 +14,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Set up session cookie management
 app.use(session({
-  secret: 'recipenest-super-secret-change-this-in-production',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 7 days
