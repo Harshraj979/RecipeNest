@@ -24,6 +24,16 @@
   --font-sans:   'DM Sans', system-ui, sans-serif;
   --transition:  0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
+[data-theme="dark"] {
+  --cream: #121212;
+  --cream-dark: #1d1d1d;
+  --ink: #f5f5f5;
+  --ink-light: #d4d4d4;
+  --ink-muted: #a3a3a3;
+  --white: #1e1e1e;
+  --border: #333333;
+  --border-dark: #555555;
+}
 
 /* ─── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,8 +80,7 @@ h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; line-height: 1.3; 
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(250, 248, 243, 0.92);
-  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--cream) 92%, transparent);  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
 
