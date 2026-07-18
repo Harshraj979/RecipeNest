@@ -162,6 +162,10 @@ async function publishRecipe(e) {
   const prepInput = document.getElementById('prep-time');
   const cookInput = document.getElementById('cook-time');
   const servingsInput = document.getElementById('servings');
+  const dietaryFlags = Array.from(document.querySelectorAll('.diet-check input[type="checkbox"]'))
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => (checkbox.value || checkbox.parentElement?.textContent || '').trim().toLowerCase())
+    .filter(Boolean);
 
   if (!titleInput || !descInput) return;
 
@@ -218,6 +222,7 @@ async function publishRecipe(e) {
     ingredients,
     steps,
     tags,
+    dietary: dietaryFlags,
     image
   };
 

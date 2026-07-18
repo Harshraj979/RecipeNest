@@ -28,6 +28,7 @@ const defaultRecipes = [
       "Poach the eggs in simmering water with a splash of vinegar for 3 minutes.",
       "Spread the smashed avocado over the toast, top with poached eggs, and sprinkle chili flakes."
     ],
+    dietary: ["vegetarian"],
     tags: ["breakfast", "easy", "avocado"],
     image: "assets/images/recipe1.png",
     author: { name: "Sarah Chen" }
@@ -53,6 +54,7 @@ const defaultRecipes = [
       "Whisk eggs and sugar until thick, then fold in melted chocolate and flour.",
       "Divide between ramekins and bake for 12-14 minutes until edges are firm but centers soft."
     ],
+    dietary: ["vegetarian"],
     tags: ["chocolate", "dessert", "lava-cake"],
     image: "assets/images/recipe2.png",
     author: { name: "Marco Rossi" }
@@ -81,6 +83,7 @@ const defaultRecipes = [
       "Add chicken thighs and stir to coat, then pour in remaining coconut milk and simmer.",
       "Season with fish sauce and palm sugar, stir through Thai basil, and serve with jasmine rice."
     ],
+    dietary: ["non-vegetarian"],
     tags: ["curry", "thai", "spicy"],
     image: "assets/images/recipe3.png",
     author: { name: "Arisa Tan" }
@@ -105,6 +108,7 @@ const defaultRecipes = [
       "Bulk ferment until doubled, then shape and proof in a banneton basket.",
       "Bake in a preheated Dutch oven at 230°C (450°F) for 20 minutes covered, then 25 minutes uncovered."
     ],
+    dietary: ["vegetarian"],
     tags: ["bread", "sourdough", "baking"],
     image: "assets/images/recipe4.png",
     author: { name: "James Park" }
@@ -130,6 +134,7 @@ const defaultRecipes = [
       "Whisk tahini with lemon juice and a splash of water to make a smooth dressing.",
       "Drizzle dressing over the bowls and garnish with parsley."
     ],
+    dietary: ["vegetarian", "gluten-free"],
     tags: ["lunch", "vegetarian", "healthy"],
     image: "assets/images/recipe5.png",
     author: { name: "Leila Hassan" }
@@ -153,6 +158,7 @@ const defaultRecipes = [
       "Add pasta to the pan and toss, then remove from heat and stir in Pecorino cheese rapidly.",
       "Keep stirring and adding pasta water as needed to create a glossy, creamy sauce."
     ],
+    dietary: ["vegetarian"],
     tags: ["pasta", "italian", "dinner"],
     image: "assets/images/recipe3.png",
     author: { name: "Riya Sharma" }
