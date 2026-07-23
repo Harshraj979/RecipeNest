@@ -1,8 +1,4 @@
 // backend/routes/auth.routes.js
-// ─────────────────────────────────────────────
-// Auth Router mapping endpoints to auth controller methods
-// ─────────────────────────────────────────────
-
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
