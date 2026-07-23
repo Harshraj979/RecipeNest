@@ -3,6 +3,46 @@
 const Recipe = require('../models/Recipe');
 const User = require('../models/User');
 
+const DIETARY_KEYWORDS = {
+  vegetarian: ['vegetarian'],
+  vegan: ['vegan'],
+  'gluten-free': ['gluten-free', 'gluten free'],
+  'dairy-free': ['dairy-free', 'dairy free'],
+  'nut-free': ['nut-free', 'nut free'],
+  'non-vegetarian': ['non-vegetarian', 'non vegetarian', 'chicken', 'beef', 'pork', 'lamb', 'fish', 'seafood', 'shrimp', 'salmon', 'tuna', 'turkey', 'bacon', 'sausage']
+};
+
+function getRecipeText(recipe) {
+  const parts = [recipe.title, recipe.description, ...(recipe.tags || []), ...(recipe.dietary || [])];
+  (recipe.ingredients || []).forEach((ingredient) => {
+    if (ingredient?.amount) parts.push(ingredient.amount);
+    if (ingredient?.name) parts.push(ingredient.name);
+  });
+  return parts.join(' ').toLowerCase();
+}
+
+function matchesDietaryFilter(recipe, diet) {
+  if (!diet) return true;
+
+  const normalizedDiet = String(diet).toLowerCase();
+  const keywords = DIETARY_KEYWORDS[normalizedDiet] || [normalizedDiet];
+  const text = getRecipeText(recipe);
+
+  if (normalizedDiet === 'non-vegetarian') {
+    return keywords.some((keyword) => text.includes(keyword));
+  }
+
+  if (Array.isArray(recipe.dietary) && recipe.dietary.map((item) => String(item).toLowerCase()).includes(normalizedDiet)) {
+    return true;
+  }
+
+  if (Array.isArray(recipe.tags) && recipe.tags.map((item) => String(item).toLowerCase()).includes(normalizedDiet)) {
+    return true;
+  }
+
+  return keywords.some((keyword) => text.includes(keyword));
+}
+
 // GET /api/recipes
 exports.getRecipes = async (req, res) => {
   try {
@@ -17,7 +57,11 @@ exports.getRecipes = async (req, res) => {
     }
 
     const recipes = await Recipe.find(filter).sort({ createdAt: -1 });
-    res.json({ recipes });
+    const filteredRecipes = req.query.diet
+      ? recipes.filter((recipe) => matchesDietaryFilter(recipe, req.query.diet))
+      : recipes;
+
+    res.json({ recipes: filteredRecipes });
   } catch (err) {
     console.error('Get recipes error:', err);
     res.status(500).json({ message: 'Server error.' });
@@ -38,7 +82,7 @@ exports.getRecipeById = async (req, res) => {
 // POST /api/recipes
 exports.createRecipe = async (req, res) => {
   try {
-    const { title, description, category, difficulty, prepTime, cookTime, servings, ingredients, steps, tags, image } = req.body;
+    const { title, description, category, difficulty, prepTime, cookTime, servings, ingredients, steps, tags, dietary, image } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: 'Recipe title is required.' });
@@ -57,6 +101,7 @@ exports.createRecipe = async (req, res) => {
       ingredients: ingredients || [],
       steps:       steps       || [],
       tags:        tags        || [],
+      dietary:     dietary     || [],
       image:       image       || '',
       author: { id: req.session.userId, name: author ? author.name : 'Anonymous' }
     });

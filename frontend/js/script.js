@@ -57,7 +57,6 @@
       .rn-page-loader,
       .rn-lightbox,
       .rn-toast-container,
-      .rn-back-to-top,
       .rn-progress-bar,
       .rn-mobile-toggle,
       .rn-search-suggestions,
@@ -199,6 +198,7 @@
         background: linear-gradient(145deg, #c1440e, #f59e0b);
         color: white;
         box-shadow: 0 18px 36px rgba(193, 68, 14, 0.28);
+        pointer-events: auto;
         opacity: 0;
         transform: translateY(18px) scale(0.92);
         transition: opacity 180ms ease, transform 180ms ease, box-shadow 180ms ease;
