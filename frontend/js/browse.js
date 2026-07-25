@@ -218,7 +218,7 @@ function renderRecipes() {
   }
 
   pageRecipes.forEach((recipe) => {
-    const imgUrl = recipe.image || 'assets/images/recipe3.png';
+    const imgUrl = recipe.image || 'https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg';
     const difficulty = recipe.difficulty || 'easy';
     const categoryLabel = (recipe.category || 'dinner').charAt(0).toUpperCase() + (recipe.category || 'dinner').slice(1);
     const categoryTagClass = recipe.category === 'breakfast' ? 'tag--sage' : (recipe.category === 'dessert' ? 'tag--rust' : '');
