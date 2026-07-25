@@ -1,4 +1,3 @@
-/* ─── Browse Page JS ──────────────────────────────────────── */
 
 let currentCategory = 'all';
 let currentSearch = '';

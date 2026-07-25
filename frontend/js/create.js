@@ -151,7 +151,7 @@ function saveDraft() {
   showToast('Draft saved!', 'success');
 }
 
-/* ── Publish ── */
+/* ── Publish (uses FormData + Multer) ── */
 async function publishRecipe(e) {
   if (e) e.preventDefault();
   
@@ -162,6 +162,7 @@ async function publishRecipe(e) {
   const prepInput = document.getElementById('prep-time');
   const cookInput = document.getElementById('cook-time');
   const servingsInput = document.getElementById('servings');
+  const coverPhotoInput = document.getElementById('cover-photo');
   const dietaryFlags = Array.from(document.querySelectorAll('.diet-check input[type="checkbox"]'))
     .filter((checkbox) => checkbox.checked)
     .map((checkbox) => (checkbox.value || checkbox.parentElement?.textContent || '').trim().toLowerCase())
@@ -208,29 +209,30 @@ async function publishRecipe(e) {
     tags.push(span.textContent.trim());
   });
 
-  const previewImg = document.getElementById('preview-img');
-  const image = (previewImg && previewImg.src && !previewImg.src.endsWith('create.html') && !previewImg.src.endsWith('create.html#')) ? previewImg.src : '';
+  // Build FormData instead of JSON — the image goes as a real file
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('description', desc);
+  formData.append('category', catInput?.value || 'dinner');
+  formData.append('difficulty', diffInput?.value || 'easy');
+  formData.append('prepTime', parseInt(prepInput?.value) || 0);
+  formData.append('cookTime', parseInt(cookInput?.value) || 0);
+  formData.append('servings', parseInt(servingsInput?.value) || 4);
+  formData.append('ingredients', JSON.stringify(ingredients));
+  formData.append('steps', JSON.stringify(steps));
+  formData.append('tags', JSON.stringify(tags));
+  formData.append('dietary', JSON.stringify(dietaryFlags));
 
-  const payload = {
-    title,
-    description: desc,
-    category: catInput?.value || 'dinner',
-    difficulty: diffInput?.value || 'easy',
-    prepTime: parseInt(prepInput?.value) || 0,
-    cookTime: parseInt(cookInput?.value) || 0,
-    servings: parseInt(servingsInput?.value) || 4,
-    ingredients,
-    steps,
-    tags,
-    dietary: dietaryFlags,
-    image
-  };
+  // Attach the actual image file (if selected)
+  if (coverPhotoInput && coverPhotoInput.files && coverPhotoInput.files[0]) {
+    formData.append('image', coverPhotoInput.files[0]);
+  }
 
   try {
     const res = await fetch('/api/recipes', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      // Do NOT set Content-Type — browser auto-sets multipart/form-data with boundary
+      body: formData
     });
 
     const data = await res.json();

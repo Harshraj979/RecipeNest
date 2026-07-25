@@ -2,6 +2,7 @@
 
 const Recipe = require('../models/Recipe');
 const User = require('../models/User');
+const cloudinary = require('../config/cloudinary');
 
 const DIETARY_KEYWORDS = {
   vegetarian: ['vegetarian'],
@@ -43,6 +44,37 @@ function matchesDietaryFilter(recipe, diet) {
   return keywords.some((keyword) => text.includes(keyword));
 }
 
+/**
+ * Upload a buffer to Cloudinary and return the secure URL.
+ * Uses a stream upload so the file never touches disk.
+ */
+function uploadToCloudinary(fileBuffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'recipenest', resource_type: 'image' },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result.secure_url);
+      }
+    );
+    stream.end(fileBuffer);
+  });
+}
+
+/**
+ * Safely parse a JSON string, returning the fallback if parsing fails.
+ * Multer sends form-data fields as strings, so arrays need parsing.
+ */
+function safeParse(value, fallback) {
+  if (Array.isArray(value)) return value;
+  if (!value) return fallback;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
 // GET /api/recipes
 exports.getRecipes = async (req, res) => {
   try {
@@ -82,10 +114,22 @@ exports.getRecipeById = async (req, res) => {
 // POST /api/recipes
 exports.createRecipe = async (req, res) => {
   try {
-    const { title, description, category, difficulty, prepTime, cookTime, servings, ingredients, steps, tags, dietary, image } = req.body;
+    const { title, description, category, difficulty, prepTime, cookTime, servings } = req.body;
+
+    // Multer delivers form-data fields as strings; parse JSON arrays
+    const ingredients = safeParse(req.body.ingredients, []);
+    const steps       = safeParse(req.body.steps, []);
+    const tags        = safeParse(req.body.tags, []);
+    const dietary     = safeParse(req.body.dietary, []);
 
     if (!title) {
       return res.status(400).json({ message: 'Recipe title is required.' });
+    }
+
+    // Upload image to Cloudinary if a file was provided
+    let imageUrl = '';
+    if (req.file) {
+      imageUrl = await uploadToCloudinary(req.file.buffer);
     }
 
     const author = await User.findById(req.session.userId).select('name');
@@ -98,11 +142,11 @@ exports.createRecipe = async (req, res) => {
       prepTime:    Number(prepTime)  || 0,
       cookTime:    Number(cookTime)  || 0,
       servings:    Number(servings)  || 4,
-      ingredients: ingredients || [],
-      steps:       steps       || [],
-      tags:        tags        || [],
-      dietary:     dietary     || [],
-      image:       image       || '',
+      ingredients,
+      steps,
+      tags,
+      dietary,
+      image:       imageUrl,
       author: { id: req.session.userId, name: author ? author.name : 'Anonymous' }
     });
 
