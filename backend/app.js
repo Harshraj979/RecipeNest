@@ -2,12 +2,16 @@
 
 const express = require('express');
 const session = require('express-session');
+const compression = require('compression');
 const path = require('path');
 
 const authRoutes = require('./routes/auth.routes');
 const recipeRoutes = require('./routes/recipe.routes');
 
 const app = express();
+
+// Gzip compress all responses (HTML, CSS, JS, JSON)
+app.use(compression());
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ limit: '1mb', extended: true }));
@@ -23,7 +27,11 @@ app.use(session({
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+// Serve static files with 1-day browser cache
+app.use(express.static(path.join(__dirname, "../frontend"), {
+  maxAge: '1d',
+  etag: true
+}));
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));

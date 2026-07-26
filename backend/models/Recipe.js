@@ -19,7 +19,11 @@ const recipeSchema = new mongoose.Schema({
     id:   { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     name: String
   },
-  createdAt: { type: Date, default: Date.now }
+  createdAt:   { type: Date, default: Date.now }
 });
+
+recipeSchema.index({ category: 1, createdAt: -1 });
+recipeSchema.index({ 'author.id': 1 });
+recipeSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Recipe', recipeSchema);

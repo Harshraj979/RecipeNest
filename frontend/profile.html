@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Collection — RecipeNest</title>
   <meta name="description" content="View your published and saved recipes on RecipeNest." />
+  <link rel="preconnect" href="https://res.cloudinary.com" />
+  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/profile.css" />
 </head>
@@ -90,70 +92,7 @@
             <h2>Published recipes <span style="color:var(--ink-muted);font-weight:400;">(24)</span></h2>
             <a href="create.html" class="btn btn--primary btn--sm">+ New recipe</a>
           </div>
-          <div class="recipe-grid">
-            <article class="recipe-card fade-in">
-              <div class="recipe-card__img-wrap">
-                <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990512/recipenest/assets/recipe1.jpg" alt="Avocado Toast" class="recipe-card__img" />
-                <button class="recipe-card__bookmark saved" style="background:var(--rust);color:white;">♥</button>
-              </div>
-              <div class="recipe-card__body">
-                <div class="recipe-card__meta">
-                  <span class="tag tag--sage">Breakfast</span>
-                  <span class="tag">15 min</span>
-                </div>
-                <a href="recipe.html"><h3 class="recipe-card__title">Smashed Avocado Toast with Poached Egg</h3></a>
-                <p class="recipe-card__desc">Creamy avocado on toasted sourdough with a perfectly poached egg.</p>
-                <div class="recipe-card__footer">
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn--ghost btn--sm" onclick="showToast('Draft saved','success')">Edit</button>
-                    <button class="btn btn--ghost btn--sm" style="color:var(--rust);" onclick="confirmDelete()">Delete</button>
-                  </div>
-                  <div class="recipe-card__rating"><span class="stars">★★★★★</span> 4.8</div>
-                </div>
-              </div>
-            </article>
-            <article class="recipe-card fade-in">
-              <div class="recipe-card__img-wrap">
-                <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990519/recipenest/assets/recipe5.jpg" alt="Chickpea Bowl" class="recipe-card__img" />
-                <button class="recipe-card__bookmark saved" style="background:var(--rust);color:white;">♥</button>
-              </div>
-              <div class="recipe-card__body">
-                <div class="recipe-card__meta">
-                  <span class="tag tag--sage">Lunch</span>
-                  <span class="tag">10 min</span>
-                </div>
-                <a href="recipe.html"><h3 class="recipe-card__title">Mediterranean Chickpea Bowl</h3></a>
-                <p class="recipe-card__desc">A vibrant bowl with roasted chickpeas and lemony tahini dressing.</p>
-                <div class="recipe-card__footer">
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn--ghost btn--sm" onclick="showToast('Draft saved','success')">Edit</button>
-                    <button class="btn btn--ghost btn--sm" style="color:var(--rust);" onclick="confirmDelete()">Delete</button>
-                  </div>
-                  <div class="recipe-card__rating"><span class="stars">★★★★☆</span> 4.6</div>
-                </div>
-              </div>
-            </article>
-            <article class="recipe-card fade-in">
-              <div class="recipe-card__img-wrap">
-                <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990517/recipenest/assets/recipe4.jpg" alt="Sourdough" class="recipe-card__img" />
-              </div>
-              <div class="recipe-card__body">
-                <div class="recipe-card__meta">
-                  <span class="tag">Baking</span>
-                  <span class="tag tag--rust">Draft</span>
-                </div>
-                <a href="recipe.html"><h3 class="recipe-card__title">Overnight Sourdough Focaccia</h3></a>
-                <p class="recipe-card__desc">A dimpled, olive-oil drenched focaccia that proves itself overnight in the fridge.</p>
-                <div class="recipe-card__footer">
-                  <div style="display:flex;gap:6px;">
-                    <button class="btn btn--primary btn--sm" onclick="showToast('Recipe published! 🎉','success')">Publish</button>
-                    <button class="btn btn--ghost btn--sm" onclick="showToast('Draft saved','success')">Edit</button>
-                  </div>
-                  <span style="font-size:0.75rem;color:var(--ink-muted);">Draft</span>
-                </div>
-              </div>
-            </article>
-          </div>
+          <div class="recipe-grid"></div>
         </div>
 
         <!-- ── Saved Collection ── -->
@@ -171,7 +110,7 @@
           <div class="recipe-grid">
             <article class="recipe-card fade-in">
               <div class="recipe-card__img-wrap">
-                <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990514/recipenest/assets/recipe2.jpg" alt="Lava Cake" class="recipe-card__img" />
+                <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990514/recipenest/assets/recipe2.jpg" alt="Lava Cake" class="recipe-card__img" />
                 <button class="recipe-card__bookmark saved">♥</button>
               </div>
               <div class="recipe-card__body">
@@ -186,7 +125,7 @@
             </article>
             <article class="recipe-card fade-in">
               <div class="recipe-card__img-wrap">
-                <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg" alt="Thai Curry" class="recipe-card__img" />
+                <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg" alt="Thai Curry" class="recipe-card__img" />
                 <button class="recipe-card__bookmark saved">♥</button>
               </div>
               <div class="recipe-card__body">

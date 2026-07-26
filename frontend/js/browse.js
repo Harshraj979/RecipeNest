@@ -22,13 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Debounce search helper
+  let searchTimeout = null;
+
   // Handle search input
   const searchInput = document.getElementById('recipe-search');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
-      currentSearch = e.target.value.trim();
-      currentPage = 1;
-      fetchAndRenderRecipes(currentCategory, currentSearch, currentDiet, currentTimeFilter);
+      clearTimeout(searchTimeout);
+      const val = e.target.value.trim();
+      searchTimeout = setTimeout(() => {
+        currentSearch = val;
+        currentPage = 1;
+        fetchAndRenderRecipes(currentCategory, currentSearch, currentDiet, currentTimeFilter);
+      }, 300);
     });
   }
 
@@ -232,7 +239,7 @@ function renderRecipes() {
     gridCard.dataset.category = recipe.category;
     gridCard.innerHTML = `
       <div class="recipe-card__img-wrap">
-        <img src="${imgUrl}" alt="${recipe.title}" class="recipe-card__img" />
+        <img loading="lazy" src="${imgUrl}" alt="${recipe.title}" class="recipe-card__img" />
         <button class="recipe-card__bookmark">♡</button>
       </div>
       <div class="recipe-card__body">
@@ -259,7 +266,7 @@ function renderRecipes() {
     listCard.className = 'recipe-list-item';
     listCard.dataset.category = recipe.category;
     listCard.innerHTML = `
-      <img src="${imgUrl}" alt="${recipe.title}" />
+      <img loading="lazy" src="${imgUrl}" alt="${recipe.title}" />
       <div class="recipe-list-item__body">
         <div class="recipe-card__meta">
           <span class="tag ${categoryTagClass}">${categoryLabel}</span>

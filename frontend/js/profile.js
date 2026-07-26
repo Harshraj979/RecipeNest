@@ -10,15 +10,21 @@ window.switchTab = function switchTab(tabId) {
   });
 };
 
-function confirmDelete() {
+async function confirmDeleteRecipe(id) {
+  if (!id) return;
   if (confirm('Delete this recipe? This cannot be undone.')) {
-    showToast('Recipe deleted', 'error');
-  }
-}
-
-function confirmDeleteRecipe(id) {
-  if (confirm('Delete this recipe? This cannot be undone.')) {
-    showToast('Recipe deleted', 'error');
+    try {
+      const res = await fetch(`/api/recipes/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.message || 'Failed to delete recipe', 'error');
+        return;
+      }
+      showToast('Recipe deleted successfully', 'success');
+      loadUserProfile();
+    } catch (err) {
+      showToast('Error deleting recipe', 'error');
+    }
   }
 }
 

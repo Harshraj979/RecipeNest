@@ -88,7 +88,7 @@ exports.getRecipes = async (req, res) => {
       filter.title = { $regex: req.query.search, $options: 'i' };
     }
 
-    const recipes = await Recipe.find(filter).sort({ createdAt: -1 });
+    const recipes = await Recipe.find(filter).sort({ createdAt: -1 }).lean();
     const filteredRecipes = req.query.diet
       ? recipes.filter((recipe) => matchesDietaryFilter(recipe, req.query.diet))
       : recipes;
@@ -103,7 +103,7 @@ exports.getRecipes = async (req, res) => {
 // GET /api/recipes/:id
 exports.getRecipeById = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id);
+    const recipe = await Recipe.findById(req.params.id).lean();
     if (!recipe) return res.status(404).json({ message: 'Recipe not found.' });
     res.json({ recipe });
   } catch (err) {
@@ -154,5 +154,24 @@ exports.createRecipe = async (req, res) => {
   } catch (err) {
     console.error('Create recipe error:', err);
     res.status(500).json({ message: 'Server error. Please try again.' });
+  }
+};
+
+// DELETE /api/recipes/:id
+exports.deleteRecipe = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) return res.status(404).json({ message: 'Recipe not found.' });
+
+    // Check ownership
+    if (String(recipe.author?.id) !== String(req.session.userId)) {
+      return res.status(403).json({ message: 'Not authorized to delete this recipe.' });
+    }
+
+    await Recipe.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Recipe deleted successfully.' });
+  } catch (err) {
+    console.error('Delete recipe error:', err);
+    res.status(500).json({ message: 'Server error.' });
   }
 };
