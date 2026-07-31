@@ -93,11 +93,13 @@ async function loadUserRecipes(user) {
     const data = await res.json();
     const recipes = data.recipes || [];
 
-    // Use string comparison for author ID matching
+    // Match by author ID or case-insensitive author name
     const userId = String(user._id || user.id || '');
+    const userName = (user.name || '').trim().toLowerCase();
     const myRecipes = recipes.filter(r => {
       const authorId = String(r.author?.id || '');
-      return authorId === userId || r.author?.name === user.name;
+      const authorName = (r.author?.name || '').trim().toLowerCase();
+      return (userId && authorId === userId) || (userName && authorName && authorName === userName);
     });
 
     const grid = document.querySelector('#tab-my-recipes .recipe-grid');
@@ -125,9 +127,10 @@ async function loadUserRecipes(user) {
       const imgUrl = recipe.image || 'https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg';
       const categoryLabel = (recipe.category || 'dinner').charAt(0).toUpperCase() + (recipe.category || 'dinner').slice(1);
       const categoryTagClass = recipe.category === 'breakfast' ? 'tag--sage' : (recipe.category === 'dessert' ? 'tag--rust' : '');
+      const totalTime = (Number(recipe.prepTime) || 0) + (Number(recipe.cookTime) || 0);
 
       const article = document.createElement('article');
-      article.className = 'recipe-card fade-in';
+      article.className = 'recipe-card fade-in visible';
       article.innerHTML = `
         <div class="recipe-card__img-wrap">
           <img src="${imgUrl}" alt="${recipe.title}" class="recipe-card__img" />
@@ -136,10 +139,10 @@ async function loadUserRecipes(user) {
         <div class="recipe-card__body">
           <div class="recipe-card__meta">
             <span class="tag ${categoryTagClass}">${categoryLabel}</span>
-            <span class="tag">${recipe.prepTime + recipe.cookTime} min</span>
+            <span class="tag">${totalTime} min</span>
           </div>
           <a href="recipe.html?id=${recipe._id}"><h3 class="recipe-card__title">${recipe.title}</h3></a>
-          <p class="recipe-card__desc">${recipe.description}</p>
+          <p class="recipe-card__desc">${recipe.description || ''}</p>
           <div class="recipe-card__footer">
             <div style="display:flex;gap:6px;">
               <button class="btn btn--ghost btn--sm" onclick="showToast('Edit mode coming soon','success')">Edit</button>

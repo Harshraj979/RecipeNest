@@ -81,7 +81,7 @@ exports.getRecipes = async (req, res) => {
     const filter = {};
 
     if (req.query.category && req.query.category !== 'all') {
-      filter.category = req.query.category;
+      filter.category = { $regex: new RegExp(`^${req.query.category.trim()}$`, 'i') };
     }
 
     if (req.query.search) {
@@ -129,7 +129,12 @@ exports.createRecipe = async (req, res) => {
     // Upload image to Cloudinary if a file was provided
     let imageUrl = '';
     if (req.file) {
-      imageUrl = await uploadToCloudinary(req.file.buffer);
+      try {
+        imageUrl = await uploadToCloudinary(req.file.buffer);
+      } catch (uploadErr) {
+        console.error('Cloudinary upload error:', uploadErr);
+        return res.status(500).json({ message: 'Failed to upload image to Cloudinary. Please try a smaller image.' });
+      }
     }
 
     const author = await User.findById(req.session.userId).select('name');
@@ -137,8 +142,8 @@ exports.createRecipe = async (req, res) => {
     const recipe = await Recipe.create({
       title,
       description,
-      category:    category    || 'dinner',
-      difficulty:  difficulty  || 'easy',
+      category:    (category || 'dinner').toLowerCase(),
+      difficulty:  (difficulty || 'easy').toLowerCase(),
       prepTime:    Number(prepTime)  || 0,
       cookTime:    Number(cookTime)  || 0,
       servings:    Number(servings)  || 4,

@@ -235,7 +235,7 @@ function renderRecipes() {
     const dietTag = Array.isArray(recipe.dietary) && recipe.dietary.length ? recipe.dietary[0].replace(/-/g, ' ') : '';
 
     const gridCard = document.createElement('article');
-    gridCard.className = 'recipe-card fade-in';
+    gridCard.className = 'recipe-card fade-in visible';
     gridCard.dataset.category = recipe.category;
     gridCard.innerHTML = `
       <div class="recipe-card__img-wrap">
@@ -250,7 +250,7 @@ function renderRecipes() {
           ${dietTag ? `<span class="tag">${dietTag}</span>` : ''}
         </div>
         <a href="recipe.html?id=${recipe._id}"><h3 class="recipe-card__title">${recipe.title}</h3></a>
-        <p class="recipe-card__desc">${recipe.description}</p>
+        <p class="recipe-card__desc">${recipe.description || ''}</p>
         <div class="recipe-card__footer">
           <div class="recipe-card__author">
             <div class="avatar">${authorInitial}</div>
@@ -263,7 +263,7 @@ function renderRecipes() {
     gridContainer.appendChild(gridCard);
 
     const listCard = document.createElement('div');
-    listCard.className = 'recipe-list-item';
+    listCard.className = 'recipe-list-item fade-in visible';
     listCard.dataset.category = recipe.category;
     listCard.innerHTML = `
       <img loading="lazy" src="${imgUrl}" alt="${recipe.title}" />

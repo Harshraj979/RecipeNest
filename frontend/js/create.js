@@ -183,6 +183,12 @@ async function publishRecipe(e) {
     return;
   }
 
+  // Find submit buttons
+  const submitBtns = document.querySelectorAll('button[type="submit"], button[onclick="publishRecipe()"]');
+  submitBtns.forEach(btn => { btn.disabled = true; });
+
+  showToast('Publishing recipe...', 'info');
+
   // Parse ingredients
   const ingredients = [];
   document.querySelectorAll('#ingredient-rows .ingredient-row').forEach(row => {
@@ -235,8 +241,13 @@ async function publishRecipe(e) {
       body: formData
     });
 
-    const data = await res.json();
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (_) {}
+
     if (!res.ok) {
+      submitBtns.forEach(btn => { btn.disabled = false; });
       showToast(data.message || 'Failed to publish recipe', 'error');
       return;
     }
@@ -248,6 +259,7 @@ async function publishRecipe(e) {
 
   } catch (err) {
     console.error('Failed to publish recipe:', err);
+    submitBtns.forEach(btn => { btn.disabled = false; });
     showToast('Server error publishing recipe', 'error');
   }
 }
