@@ -196,9 +196,10 @@
     const hamburger = document.getElementById('nav-hamburger');
     const navLinks = document.querySelector('.nav__links');
     if (hamburger && navLinks) {
-      hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('is-open');
-      });
+        hamburger.addEventListener('click', () => {
+          navLinks.classList.toggle('open');
+          hamburger.classList.toggle('is-open');
+        });
     }
 
     // Backdrop click to close modal
