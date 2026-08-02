@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="hero__img-wrap fade-in">
-      <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990511/recipenest/assets/hero.jpg" alt="Beautiful overhead food photography" class="hero__img" />
+      <img src="https://source.unsplash.com/1200x800/?food" alt="Delicious food photography" class="hero__img" />
       <div class="hero__img-badge">
         <div class="hero__img-badge-icon">⭐</div>
         <div class="hero__img-badge-text">
@@ -86,15 +86,15 @@
         <h2 class="section-title">Featured Collections</h2>
         <div class="featured-grid">
           <div class="featured-item">
-            <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990511/recipenest/assets/hero.jpg" alt="Featured 1" class="featured-img" />
+            <img src="https://source.unsplash.com/600x400/?salad" alt="Fresh Summer Salad" class="featured-img" />
             <h3 class="featured-title">Fresh Summer Salads</h3>
           </div>
           <div class="featured-item">
-            <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990512/recipenest/assets/recipe1.jpg" alt="Featured 2" class="featured-img" />
+            <img src="https://source.unsplash.com/600x400/?avocado+toast" alt="Homemade Avocado Toast" class="featured-img" />
             <h3 class="featured-title">Homemade Avocado Toast</h3>
           </div>
           <div class="featured-item">
-            <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg" alt="Featured 3" class="featured-img" />
+            <img src="https://source.unsplash.com/600x400/?thai+curry" alt="Thai Green Curry" class="featured-img" />
             <h3 class="featured-title">Thai Green Curry</h3>
           </div>
         </div>
@@ -107,6 +107,11 @@
     <span style="color:var(--ink-muted);font-size:1rem;">🔍</span>
     <input type="text" id="global-search" placeholder="Search recipes, ingredients, chefs…" />
     <button class="btn btn--primary" onclick="window.location='browse.html'">Search</button>
+  </div>
+  <div class="image-search" style="margin-top:12px;">
+    <input type="text" id="image-search-input" placeholder="Search images..." />
+    <button class="btn btn--primary" onclick="searchImage()">Search Image</button>
+    <div id="image-search-result" class="image-result" style="margin-top:12px;"></div>
   </div>
 </div>
 
@@ -157,7 +162,7 @@
       <a href="browse.html" class="btn btn--ghost">View all →</a>
     </div>
     <div class="featured-card fade-in">
-      <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg" alt="Thai Green Curry" class="featured-card__img" />
+      <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785649931/recipenest/efx0sz7ndzimghllwwbk.png" alt="Thai Green Curry" class="featured-card__img" />
       <div class="featured-card__body">
         <div class="featured-label">⭐ Editor's pick</div>
         <h2 class="featured-card__title">Authentic Thai Green Curry</h2>
@@ -203,7 +208,7 @@
     <div class="recipe-grid">
       <article class="recipe-card fade-in" data-category="breakfast">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990512/recipenest/assets/recipe1.jpg" alt="Avocado Toast" class="recipe-card__img" />
+          <img loading="lazy" src="https://source.unsplash.com/600x400/?avocado+toast" alt="Avocado Toast" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
@@ -227,7 +232,7 @@
       </article>
       <article class="recipe-card fade-in" data-category="dessert">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990514/recipenest/assets/recipe2.jpg" alt="Chocolate Lava Cake" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Chocolate Lava Cake" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
@@ -251,7 +256,7 @@
       </article>
       <article class="recipe-card fade-in" data-category="lunch">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990519/recipenest/assets/recipe5.jpg" alt="Mediterranean Salad" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Mediterranean Salad" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
@@ -275,7 +280,7 @@
       </article>
       <article class="recipe-card fade-in" data-category="baking">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1784990517/recipenest/assets/recipe4.jpg" alt="Sourdough Bread" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Sourdough Bread" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">

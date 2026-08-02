@@ -131,7 +131,7 @@ h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; line-height: 1.3; 
 }
 
 .nav__link:hover { color: var(--ink); background: var(--cream-dark); }
-.nav__link.active { color: var(--rust); }
+.nav__link.is-active { color: var(--rust); }
 
 .nav__actions {
   display: flex;
@@ -722,4 +722,11 @@ section { padding: 56px 0; }
 .fade-in.visible {
   opacity: 1;
   transform: none;
+}
+
+/* Image search result styling */
+.image-result img {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
 }
