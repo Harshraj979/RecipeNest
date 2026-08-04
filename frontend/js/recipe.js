@@ -44,6 +44,7 @@ async function loadRecipeDetails() {
   if (!recipeId) {
     // No ID in URL — keep static default content (Thai Green Curry)
     setupCheckboxListeners();
+    wireSaveButton(null);
     return;
   }
 
@@ -56,6 +57,7 @@ async function loadRecipeDetails() {
 
     const data = await res.json();
     const recipe = data.recipe;
+    wireSaveButton(recipe._id);
 
     // Update Servings configuration
     baseServings = recipe.servings || 4;
@@ -173,6 +175,47 @@ function setupCheckboxListeners() {
       e.stopPropagation();
       cb.parentElement.classList.toggle('checked', cb.checked);
     });
+  });
+}
+
+function wireSaveButton(recipeId) {
+  const saveBtn = document.getElementById('save-btn');
+  if (!saveBtn) return;
+
+  if (!recipeId) {
+    // No real ID — just show a sign-in prompt
+    saveBtn.addEventListener('click', () => {
+      if (window.toggleSaveRecipe) {
+        window.toggleSaveRecipe(null, saveBtn);
+      }
+    });
+    return;
+  }
+
+  saveBtn.dataset.recipeId = recipeId;
+
+  // Check if already saved
+  fetch('/api/auth/saved/ids')
+    .then(r => r.json())
+    .then(data => {
+      const savedIds = data.ids || [];
+      if (savedIds.includes(String(recipeId))) {
+        saveBtn.textContent = '♥ Saved';
+        saveBtn.classList.add('saved');
+      }
+    })
+    .catch(() => {});
+
+  saveBtn.addEventListener('click', async () => {
+    if (window.toggleSaveRecipe) {
+      await window.toggleSaveRecipe(recipeId, saveBtn);
+      // Update button label based on saved state
+      if (saveBtn.classList.contains('saved')) {
+        saveBtn.textContent = '♥ Saved';
+      } else {
+        saveBtn.textContent = '♡ Save recipe';
+      }
+    }
   });
 }
 

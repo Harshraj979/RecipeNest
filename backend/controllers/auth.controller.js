@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Recipe = require('../models/Recipe');
 
 // POST /api/auth/signup
 exports.signup = async (req, res) => {
@@ -55,7 +56,7 @@ exports.login = async (req, res) => {
 
     req.session.userId = user._id;
 
-    res.json({ 
+    res.json({
       user: { id: user._id, name: user.name, email: user.email, bio: user.bio, location: user.location }
     });
   } catch (err) {
@@ -117,8 +118,7 @@ exports.updateProfile = async (req, res) => {
     }
 
     await user.save();
-    
-    // Return updated user object (without password)
+
     const updatedUser = {
       id: user._id,
       name: user.name,
@@ -130,5 +130,61 @@ exports.updateProfile = async (req, res) => {
   } catch (err) {
     console.error('Update profile error:', err);
     res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// POST /api/auth/save/:recipeId  — toggle save/unsave
+exports.saveRecipe = async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: 'Not logged in.' });
+  }
+  try {
+    const user = await User.findById(req.session.userId);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    const recipeId = req.params.recipeId;
+    const alreadySaved = user.savedRecipes.some(id => String(id) === String(recipeId));
+
+    if (alreadySaved) {
+      user.savedRecipes = user.savedRecipes.filter(id => String(id) !== String(recipeId));
+      await user.save();
+      return res.json({ saved: false, message: 'Recipe removed from collection.' });
+    } else {
+      user.savedRecipes.push(recipeId);
+      await user.save();
+      return res.json({ saved: true, message: 'Recipe saved to collection.' });
+    }
+  } catch (err) {
+    console.error('Save recipe error:', err);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// GET /api/auth/saved  — get all saved recipes for the logged-in user
+exports.getSavedRecipes = async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: 'Not logged in.' });
+  }
+  try {
+    const user = await User.findById(req.session.userId).populate('savedRecipes').lean();
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    res.json({ recipes: user.savedRecipes || [] });
+  } catch (err) {
+    console.error('Get saved recipes error:', err);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// GET /api/auth/saved/ids  — get just the IDs of saved recipes (for UI state)
+exports.getSavedIds = async (req, res) => {
+  if (!req.session.userId) {
+    return res.json({ ids: [] });
+  }
+  try {
+    const user = await User.findById(req.session.userId).select('savedRecipes').lean();
+    if (!user) return res.json({ ids: [] });
+    res.json({ ids: user.savedRecipes.map(id => String(id)) });
+  } catch (err) {
+    res.json({ ids: [] });
   }
 };

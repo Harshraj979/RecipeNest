@@ -240,7 +240,7 @@ function renderRecipes() {
     gridCard.innerHTML = `
       <div class="recipe-card__img-wrap">
         <img loading="lazy" src="${imgUrl}" alt="${recipe.title}" class="recipe-card__img" />
-        <button class="recipe-card__bookmark">♡</button>
+        <button class="recipe-card__bookmark" data-recipe-id="${recipe._id}">♡</button>
       </div>
       <div class="recipe-card__body">
         <div class="recipe-card__meta">
@@ -281,7 +281,7 @@ function renderRecipes() {
             <span>${authorName}</span>
           </div>
           <div class="recipe-card__rating"><span class="stars">★★★★★</span> 5.0</div>
-          <button class="recipe-card__bookmark" style="position:static;width:auto;height:auto;background:none;border:none;font-size:1.2rem;">♡</button>
+          <button class="recipe-card__bookmark" data-recipe-id="${recipe._id}" style="position:static;width:auto;height:auto;background:none;border:none;font-size:1.2rem;">♡</button>
         </div>
       </div>
     `;
@@ -290,9 +290,30 @@ function renderRecipes() {
 
   renderPagination(totalPages);
 
-  if (window.RecipeNestUI && window.RecipeNestUI.initDynamicElements) {
-    window.RecipeNestUI.initDynamicElements();
-  }
+  // Wire all bookmark buttons to real save API
+  document.querySelectorAll('.recipe-card__bookmark[data-recipe-id]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.toggleSaveRecipe) {
+        window.toggleSaveRecipe(btn.dataset.recipeId, btn);
+      }
+    });
+  });
+
+  // Mark already-saved recipes
+  fetch('/api/auth/saved/ids')
+    .then(r => r.json())
+    .then(data => {
+      const savedIds = data.ids || [];
+      document.querySelectorAll('.recipe-card__bookmark[data-recipe-id]').forEach(btn => {
+        if (savedIds.includes(btn.dataset.recipeId)) {
+          btn.textContent = '♥';
+          btn.classList.add('saved');
+        }
+      });
+    })
+    .catch(() => {});
 }
 
 /* View toggle (Grid / List) */

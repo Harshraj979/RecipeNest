@@ -8,6 +8,11 @@ window.switchTab = function switchTab(tabId) {
   document.querySelectorAll('.tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === `tab-${tabId}`);
   });
+
+  // Lazy-load saved recipes when tab is first opened
+  if (tabId === 'saved') {
+    loadSavedRecipes();
+  }
 };
 
 async function confirmDeleteRecipe(id) {
@@ -33,7 +38,6 @@ async function loadUserProfile() {
   try {
     const res = await fetch('/api/auth/me');
     if (!res.ok) {
-      // User is not logged in — redirect to homepage so they can sign in
       showToast('Please sign in first', 'error');
       setTimeout(() => {
         window.location.href = 'index.html';
@@ -77,7 +81,7 @@ async function loadUserProfile() {
     if (locInput) locInput.value = user.location || '';
     if (emailInput) emailInput.value = user.email || '';
 
-    // Load recipes published by this user dynamically
+    // Load recipes published by this user
     loadUserRecipes(user);
 
   } catch (err) {
@@ -86,14 +90,13 @@ async function loadUserProfile() {
   }
 }
 
-// Load recipes published by this user dynamically
+// Load recipes published by this user
 async function loadUserRecipes(user) {
   try {
     const res = await fetch('/api/recipes');
     const data = await res.json();
     const recipes = data.recipes || [];
 
-    // Match by author ID or case-insensitive author name
     const userId = String(user._id || user.id || '');
     const userName = (user.name || '').trim().toLowerCase();
     const myRecipes = recipes.filter(r => {
@@ -104,16 +107,12 @@ async function loadUserRecipes(user) {
 
     const grid = document.querySelector('#tab-my-recipes .recipe-grid');
     const countSpan = document.querySelector('#tab-my-recipes .collection-header h2 span');
-    
-    if (countSpan) {
-      countSpan.textContent = `(${myRecipes.length})`;
-    }
+
+    if (countSpan) countSpan.textContent = `(${myRecipes.length})`;
 
     // Update recipe count in profile stats
     const statsRecipeCount = document.querySelector('.profile-stat__num');
-    if (statsRecipeCount) {
-      statsRecipeCount.textContent = myRecipes.length;
-    }
+    if (statsRecipeCount) statsRecipeCount.textContent = myRecipes.length;
 
     if (!grid) return;
     grid.innerHTML = '';
@@ -155,12 +154,103 @@ async function loadUserRecipes(user) {
       grid.appendChild(article);
     });
 
-    if (window.RecipeNestUI && window.RecipeNestUI.initDynamicElements) {
-      window.RecipeNestUI.initDynamicElements();
-    }
-
   } catch (err) {
     console.error('Failed to load user recipes:', err);
+  }
+}
+
+// Load saved/bookmarked recipes from the database
+async function loadSavedRecipes() {
+  const grid = document.querySelector('#tab-saved .recipe-grid');
+  const countSpan = document.querySelector('#tab-saved .collection-header h2 span');
+  if (!grid) return;
+
+  // Prevent double-loading if already populated
+  if (grid.dataset.loaded === 'true') return;
+
+  grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-muted);padding:24px 0;">Loading…</p>';
+
+  try {
+    const res = await fetch('/api/auth/saved');
+    if (!res.ok) {
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-muted);padding:24px 0;">Sign in to see your saved recipes.</p>';
+      return;
+    }
+
+    const data = await res.json();
+    const recipes = data.recipes || [];
+
+    if (countSpan) countSpan.textContent = `(${recipes.length})`;
+    grid.innerHTML = '';
+    grid.dataset.loaded = 'true';
+
+    if (recipes.length === 0) {
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-muted);padding:24px 0;">No saved recipes yet. Browse and tap ♡ to save!</p>';
+      return;
+    }
+
+    recipes.forEach(recipe => {
+      if (!recipe || !recipe._id) return;
+      const imgUrl = recipe.image || 'https://res.cloudinary.com/szrk0qwp/image/upload/v1784990515/recipenest/assets/recipe3.jpg';
+      const categoryLabel = (recipe.category || 'dinner').charAt(0).toUpperCase() + (recipe.category || 'dinner').slice(1);
+      const categoryTagClass = recipe.category === 'breakfast' ? 'tag--sage' : (recipe.category === 'dessert' ? 'tag--rust' : '');
+      const totalTime = (Number(recipe.prepTime) || 0) + (Number(recipe.cookTime) || 0);
+      const authorName = recipe.author?.name || 'Anonymous';
+      const authorInitial = authorName.charAt(0).toUpperCase();
+
+      const article = document.createElement('article');
+      article.className = 'recipe-card fade-in visible';
+      article.dataset.savedId = recipe._id;
+      article.innerHTML = `
+        <div class="recipe-card__img-wrap">
+          <img loading="lazy" src="${imgUrl}" alt="${recipe.title}" class="recipe-card__img" />
+          <button class="recipe-card__bookmark saved" data-recipe-id="${recipe._id}" aria-label="Unsave recipe">♥</button>
+        </div>
+        <div class="recipe-card__body">
+          <div class="recipe-card__meta">
+            <span class="tag ${categoryTagClass}">${categoryLabel}</span>
+            <span class="tag">${totalTime} min</span>
+          </div>
+          <a href="recipe.html?id=${recipe._id}"><h3 class="recipe-card__title">${recipe.title}</h3></a>
+          <p class="recipe-card__desc">${recipe.description || ''}</p>
+          <div class="recipe-card__footer">
+            <div class="recipe-card__author">
+              <div class="avatar">${authorInitial}</div>
+              <span>${authorName}</span>
+            </div>
+            <div class="recipe-card__rating"><span class="stars">★★★★★</span></div>
+          </div>
+        </div>
+      `;
+
+      // Wire unsave button: remove from UI and DB
+      const bookmark = article.querySelector('.recipe-card__bookmark');
+      bookmark.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          const r = await fetch(`/api/auth/save/${recipe._id}`, { method: 'POST' });
+          const d = await r.json();
+          if (!d.saved) {
+            article.remove();
+            const remaining = grid.querySelectorAll('article').length;
+            if (countSpan) countSpan.textContent = `(${remaining})`;
+            if (remaining === 0) {
+              grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-muted);padding:24px 0;">No saved recipes yet. Browse and tap ♡ to save!</p>';
+            }
+            showToast('Removed from collection', 'info');
+          }
+        } catch (_) {
+          showToast('Error removing recipe', 'error');
+        }
+      });
+
+      grid.appendChild(article);
+    });
+
+  } catch (err) {
+    console.error('Failed to load saved recipes:', err);
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-muted);padding:24px 0;">Failed to load saved recipes.</p>';
   }
 }
 
@@ -174,7 +264,6 @@ async function saveProfile() {
   const password = document.getElementById('profile-new-password')?.value || '';
   const confirmPassword = document.getElementById('profile-confirm-password')?.value || '';
 
-  // Validate passwords match if typed
   if (password || confirmPassword) {
     if (password !== confirmPassword) {
       showToast('Passwords do not match', 'error');
@@ -193,9 +282,7 @@ async function saveProfile() {
     email
   };
 
-  if (password) {
-    payload.password = password;
-  }
+  if (password) payload.password = password;
 
   try {
     const res = await fetch('/api/auth/profile', {
@@ -210,10 +297,8 @@ async function saveProfile() {
       return;
     }
 
-    // Update locally stored user info
     localStorage.setItem('rn-user', JSON.stringify(data.user));
 
-    // Update displays dynamically
     const nameDisplay = document.querySelector('.profile-name');
     const bioDisplay = document.querySelector('.profile-bio');
     const locDisplay = document.querySelector('.profile-location span:nth-child(2)');
@@ -226,7 +311,6 @@ async function saveProfile() {
       avatarDisplay.textContent = data.user.name.charAt(0).toUpperCase();
     }
 
-    // Clear password inputs
     const newPassInput = document.getElementById('profile-new-password');
     const confPassInput = document.getElementById('profile-confirm-password');
     if (newPassInput) newPassInput.value = '';

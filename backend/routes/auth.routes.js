@@ -8,5 +8,8 @@ router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.get('/me', authController.me);
 router.put('/profile', authController.updateProfile);
+router.post('/save/:recipeId', authController.saveRecipe);
+router.get('/saved', authController.getSavedRecipes);
+router.get('/saved/ids', authController.getSavedIds);
 
 module.exports = router;

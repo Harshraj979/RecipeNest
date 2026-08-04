@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RecipeNest — Share & Discover Recipes</title>
   <meta name="description" content="RecipeNest is a community of home cooks and chefs sharing their best recipes. Discover, save, and publish your culinary creations." />
-  <link rel="preconnect" href="https://res.cloudinary.com" />
-  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/home.css" />
 </head>
@@ -69,7 +67,7 @@
       </div>
     </div>
     <div class="hero__img-wrap fade-in">
-      <img src="https://source.unsplash.com/1200x800/?food" alt="Delicious food photography" class="hero__img" />
+      <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785821695/recipenest/o6tumi56uvut4913wcjz.png" alt="Delicious food photography" class="hero__img" />
       <div class="hero__img-badge">
         <div class="hero__img-badge-icon">⭐</div>
         <div class="hero__img-badge-text">
@@ -86,15 +84,15 @@
         <h2 class="section-title">Featured Collections</h2>
         <div class="featured-grid">
           <div class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?salad" alt="Fresh Summer Salad" class="featured-img" />
+            <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785649931/recipenest/efx0sz7ndzimghllwwbk.png" alt="Fresh Summer Salad" class="featured-img" />
             <h3 class="featured-title">Fresh Summer Salads</h3>
           </div>
           <div class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?avocado+toast" alt="Homemade Avocado Toast" class="featured-img" />
+            <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785650925/recipenest/w7qkq5oxresnqjlpyfca.png" alt="Homemade Avocado Toast" class="featured-img" />
             <h3 class="featured-title">Homemade Avocado Toast</h3>
           </div>
           <div class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?thai+curry" alt="Thai Green Curry" class="featured-img" />
+            <img src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Thai Green Curry" class="featured-img" />
             <h3 class="featured-title">Thai Green Curry</h3>
           </div>
         </div>
@@ -107,11 +105,6 @@
     <span style="color:var(--ink-muted);font-size:1rem;">🔍</span>
     <input type="text" id="global-search" placeholder="Search recipes, ingredients, chefs…" />
     <button class="btn btn--primary" onclick="window.location='browse.html'">Search</button>
-  </div>
-  <div class="image-search" style="margin-top:12px;">
-    <input type="text" id="image-search-input" placeholder="Search images..." />
-    <button class="btn btn--primary" onclick="searchImage()">Search Image</button>
-    <div id="image-search-result" class="image-result" style="margin-top:12px;"></div>
   </div>
 </div>
 
@@ -208,7 +201,7 @@
     <div class="recipe-grid">
       <article class="recipe-card fade-in" data-category="breakfast">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://source.unsplash.com/600x400/?avocado+toast" alt="Avocado Toast" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785650925/recipenest/w7qkq5oxresnqjlpyfca.png" alt="Avocado Toast" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
@@ -232,7 +225,7 @@
       </article>
       <article class="recipe-card fade-in" data-category="dessert">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Chocolate Lava Cake" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785820253/recipenest/cviekll9sohsz1csgkgr.png" alt="Chocolate Lava Cake" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
@@ -256,7 +249,7 @@
       </article>
       <article class="recipe-card fade-in" data-category="lunch">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Mediterranean Salad" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785820712/recipenest/xh1anrodxgmxehqxdgo1.png" alt="Mediterranean Salad" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
@@ -280,7 +273,7 @@
       </article>
       <article class="recipe-card fade-in" data-category="baking">
         <div class="recipe-card__img-wrap">
-          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785651419/recipenest/lbhwvvjdrh040onguy6w.png" alt="Sourdough Bread" class="recipe-card__img" />
+          <img loading="lazy" src="https://res.cloudinary.com/szrk0qwp/image/upload/v1785821171/recipenest/rr6ixi7ghv8tmxz4ey8h.png" alt="Sourdough Bread" class="recipe-card__img" />
           <button class="recipe-card__bookmark" aria-label="Save recipe">♡</button>
         </div>
         <div class="recipe-card__body">
