@@ -47,6 +47,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+main {
+  animation: pageEnter 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font-family: var(--font-sans); cursor: pointer; }
@@ -112,6 +121,12 @@ h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; line-height: 1.3; 
   justify-content: center;
   color: white;
   font-size: 1rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.nav__logo:hover .nav__logo-icon {
+  transform: rotate(-4deg) scale(1.04);
+  box-shadow: 0 4px 12px rgba(193,68,14,.2);
 }
 
 .nav__links {
@@ -132,6 +147,7 @@ h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; line-height: 1.3; 
 
 .nav__link:hover { color: var(--ink); background: var(--cream-dark); }
 .nav__link.is-active { color: var(--rust); }
+.nav__link.is-active { background: color-mix(in srgb, var(--rust) 8%, transparent); }
 
 .nav__actions {
   display: flex;
@@ -152,6 +168,16 @@ h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; line-height: 1.3; 
   border: none;
   transition: all var(--transition);
   white-space: nowrap;
+  will-change: transform;
+}
+
+.btn:active,
+.recipe-card__bookmark:active,
+.view-btn:active,
+.page-btn:active,
+.servings-btn:active,
+.remove-btn:active {
+  transform: translateY(1px) scale(0.98);
 }
 
 .btn--primary {
@@ -265,6 +291,11 @@ h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; line-height: 1.3; 
 .recipe-card__bookmark:hover, .recipe-card__bookmark.saved {
   background: var(--rust);
   color: white;
+}
+.recipe-card__bookmark.saved { animation: bookmarkPop 0.28s ease-out; }
+
+@keyframes bookmarkPop {
+  50% { transform: scale(1.12); }
 }
 
 .recipe-card__body {
@@ -439,6 +470,14 @@ section { padding: 56px 0; }
   box-shadow: 0 0 0 3px rgba(193,68,14,.10);
 }
 
+.form-input:hover,
+.form-textarea:hover,
+.form-select:hover,
+.filter-select:hover,
+.sort-select:hover {
+  border-color: var(--border-dark);
+}
+
 .form-input::placeholder,
 .form-textarea::placeholder { color: var(--ink-muted); }
 
@@ -536,7 +575,9 @@ section { padding: 56px 0; }
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
 }
+.modal__close:hover { background: var(--rust); color: white; transform: rotate(4deg); }
 
 /* ─── Toast ─────────────────────────────────────────────── */
 .toast-container {
@@ -722,6 +763,50 @@ section { padding: 56px 0; }
 .fade-in.visible {
   opacity: 1;
   transform: none;
+}
+
+/* Keep dynamically rendered cards feeling connected to the page entrance. */
+.recipe-card.fade-in.visible,
+.recipe-list-item {
+  animation: contentLift 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.recipe-grid .recipe-card:nth-child(2),
+.featured-grid .featured-item:nth-child(2) { animation-delay: 60ms; }
+.recipe-grid .recipe-card:nth-child(3),
+.featured-grid .featured-item:nth-child(3) { animation-delay: 120ms; }
+.recipe-grid .recipe-card:nth-child(4) { animation-delay: 180ms; }
+
+@keyframes contentLift {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.recipe-hero__img {
+  animation: imageReveal 0.7s ease-out both;
+}
+
+@keyframes imageReveal {
+  from { opacity: 0.7; transform: scale(1.015); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.ingredient-item,
+.step-item {
+  transition: color var(--transition), background-color var(--transition), border-color var(--transition);
+}
+.ingredient-item:hover { color: var(--ink); }
+.step-num { transition: transform var(--transition), background-color var(--transition); }
+.step-item:hover .step-num { transform: scale(1.05); background: var(--rust); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Image search result styling */

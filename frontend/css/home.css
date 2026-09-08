@@ -19,6 +19,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  animation: homeTextReveal 0.5s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .hero__label::before {
   content: '';
@@ -26,6 +27,8 @@
   width: 24px;
   height: 1.5px;
   background: var(--rust);
+  transform-origin: left center;
+  animation: labelLineReveal 0.45s 0.2s ease-out both;
 }
 
 .hero__title {
@@ -33,11 +36,14 @@
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: var(--ink);
+  animation: homeTextReveal 0.62s 0.16s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__title em {
   font-style: italic;
   color: var(--rust);
+  display: inline-block;
+  animation: accentTextReveal 0.7s 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__sub {
@@ -46,6 +52,7 @@
   color: var(--ink-muted);
   max-width: 440px;
   line-height: 1.65;
+  animation: homeTextReveal 0.55s 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__actions {
@@ -53,6 +60,7 @@
   gap: 12px;
   margin-top: 32px;
   flex-wrap: wrap;
+  animation: homeTextReveal 0.55s 0.36s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__stats {
@@ -61,6 +69,7 @@
   margin-top: 48px;
   padding-top: 32px;
   border-top: 1px solid var(--border);
+  animation: homeTextReveal 0.55s 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__stat-num {
@@ -68,6 +77,17 @@
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--ink);
+  transition: color var(--transition), transform var(--transition);
+}
+
+.hero__stats > div {
+  transition: transform var(--transition);
+}
+
+.hero__stats > div:hover { transform: translateY(-2px); }
+.hero__stats > div:hover .hero__stat-num {
+  color: var(--rust);
+  transform: translateY(-1px);
 }
 
 .hero__stat-label {
@@ -119,7 +139,9 @@
   display: block;
   font-weight: 600;
   font-size: 0.875rem;
+  transition: color var(--transition);
 }
+.hero__img-badge:hover .hero__img-badge-text strong { color: var(--rust); }
 .hero__img-badge-text span {
   font-size: 0.75rem;
   color: var(--ink-muted);
@@ -211,7 +233,9 @@
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--ink-light);
+  transition: color var(--transition), transform var(--transition);
 }
+.category-card:hover span { transform: translateY(-1px); }
 .category-card.active span { color: white; }
 
 /* ─── Featured Section ─────────────────────────────────────── */
@@ -248,12 +272,18 @@
   text-transform: uppercase;
   color: var(--rust);
   margin-bottom: 14px;
+  animation: homeTextReveal 0.5s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .featured-card__title {
   font-size: 2rem;
   line-height: 1.15;
   letter-spacing: -0.02em;
+  transition: color var(--transition), transform var(--transition);
+}
+.featured-card:hover .featured-card__title {
+  color: var(--rust);
+  transform: translateX(2px);
 }
 
 .featured-card__desc {
@@ -261,7 +291,9 @@
   color: var(--ink-muted);
   font-size: 0.9375rem;
   line-height: 1.65;
+  transition: color var(--transition);
 }
+.featured-card:hover .featured-card__desc { color: var(--ink-light); }
 
 .featured-card__meta {
   display: flex;
@@ -318,9 +350,41 @@
 }
 
 .cta-inner h2 { color: white; font-size: 2.2rem; letter-spacing: -0.02em; }
+.cta-inner h2 { animation: homeTextReveal 0.55s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .cta-inner p { color: rgba(255, 255, 255, 0.6); margin: 14px 0 32px; font-size: 1rem; }
+.cta-inner p { animation: homeTextReveal 0.55s 0.16s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .btn--cta { background: var(--rust); color: white; font-size: 1rem; padding: 14px 32px; }
 .btn--cta:hover { background: var(--rust-light); }
+
+@keyframes homeTextReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes labelLineReveal {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes accentTextReveal {
+  from { opacity: 0; transform: translateY(6px) rotate(-2deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__label,
+  .hero__label::before,
+  .hero__title,
+  .hero__title em,
+  .hero__sub,
+  .hero__actions,
+  .hero__stats,
+  .featured-label,
+  .cta-inner h2,
+  .cta-inner p {
+    animation: none;
+  }
+}
 
 /* ─── Auth Modal Tab ───────────────────────────────────────── */
 .auth-tab-active   { background: var(--rust) !important; color: white !important; }
